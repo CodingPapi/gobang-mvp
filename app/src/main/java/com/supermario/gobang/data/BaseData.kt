@@ -23,4 +23,6 @@ interface BaseData {
 
     fun getScoreB(): Array<Array<IntArray>>
     fun getScoreW(): Array<Array<IntArray>>
+
+    fun judge(): Int
 }

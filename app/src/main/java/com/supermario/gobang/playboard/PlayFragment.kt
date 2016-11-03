@@ -44,8 +44,17 @@ class PlayFragment : Fragment(), PlayView{
 
     }
 
+    var toast: Toast? = null
     override fun showGameResult(winner: Int) {
-        Toast.makeText(activity, resources.getString(R.string.game_result) + winner, 0).show()
+        chessBoard?.post {
+            if (toast != null) {
+                toast?.cancel()
+                toast = null
+            }
+            val winnerName: String = if(winner == Chess.COLOR.BLACK) "BLACK" else "WHITE"
+            toast = Toast.makeText(activity, resources.getString(R.string.game_result) + winnerName, Toast.LENGTH_SHORT)
+            toast?.show()
+        }
     }
 
     override fun prepareToStart() {

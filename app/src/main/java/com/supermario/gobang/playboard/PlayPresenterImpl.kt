@@ -33,16 +33,22 @@ class PlayPresenterImpl @Inject constructor(var view: PlayView, var dataModule: 
     }
 
     override fun stopGame() {
+        dataModule.reset()
         view.freezeToStop()
     }
 
-    override fun putChess(x: Int, y: Int, needsThink: Boolean) {
+    override fun putChess(x: Int, y: Int, needsThinkNextStep: Boolean) {
         val resultSuccess = dataModule.putChess(makeChess(x, y))
-        Log.d("kkk", "result:" + resultSuccess)
         if (resultSuccess) {
             view.updateCurrentChess(dataModule.getCurrentChessState())
-            if (needsThink) {
-                askForNextStep()
+            val judgeResult = dataModule.judge()
+            if (judgeResult == 0) {
+                if (needsThinkNextStep) {
+                    askForNextStep()
+                }
+            } else {
+                view.showGameResult(judgeResult)
+                stopGame()
             }
         }
     }

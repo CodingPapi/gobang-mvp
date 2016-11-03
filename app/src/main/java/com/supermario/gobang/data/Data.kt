@@ -12,6 +12,10 @@ import java.util.*
  */
 class Data : BaseData {
 
+    override fun judge(): Int {
+        return ai.judge(positionArray)
+    }
+
     override fun getScoreB(): Array<Array<IntArray>> {
         return positionPointArrayBlack
     }
@@ -55,8 +59,7 @@ class Data : BaseData {
     private var chessStore: Stack<Chess> = Stack()
 
     override fun putChess(chess: Chess): Boolean {
-        var contains = false
-        contains = chessStore.contains(chess)
+        val contains = chessStore.contains(chess)
         if (!contains) {
             chessStore.push(chess)
             positionArray[chess.x][chess.y] = chess.color

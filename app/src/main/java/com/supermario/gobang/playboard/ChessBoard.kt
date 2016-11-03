@@ -106,7 +106,7 @@ class ChessBoard : View {
 
     override fun onDraw(canvas: Canvas?) {
         drawLines(canvas, gapBetweenLines.toFloat(), numOfLines, edgeMargin)
-        drawChess(canvas, gapBetweenLines, edgeMargin)
+        drawChess(canvas, gapBetweenLines, edgeMargin, chessStore)
         drawLastChessRect(canvas, gap = gapBetweenLines, edge = edgeMargin, rectWidth = gapBetweenLines / 2)
         drawScore(canvas, scoreB, gapBetweenLines, edgeMargin, scorePaintB, true)
         drawScore(canvas, scoreW, gapBetweenLines, edgeMargin, scorePaintW, false)
@@ -132,8 +132,8 @@ class ChessBoard : View {
                 pX = (dividerX / gapBetweenLines).toInt()
                 pY = (dividerY / gapBetweenLines).toInt()
 
-                pX = if (remainderX > gapBetweenLines / 2) pX + 1 else pX
-                pY = if (remainderY > gapBetweenLines / 2) pY + 1 else pY
+                pX = if (remainderX > gapBetweenLines / 2 && pX + 1 < numOfLines) pX + 1 else pX
+                pY = if (remainderY > gapBetweenLines / 2 && pY + 1 < numOfLines) pY + 1 else pY
 
                 touchCallback?.askToPutChessAt(pX, pY)
             }
@@ -163,9 +163,10 @@ class ChessBoard : View {
                 gap * 3 + edge, gap * 11 + edge, gap * 11 + edge, gap * 11 + edge), blackDotPaint)
     }
 
-    fun drawChess(canvas: Canvas?, gap: Int, edge: Int) {
+    fun drawChess(canvas: Canvas?, gap: Int, edge: Int, stack: Stack<Chess>) {
         chessPaint.strokeWidth = gap / 2.toFloat()
-        for ((color, x, y) in chessStore) {
+        val tempStack = stack.clone() as Stack<Chess>
+        for ((color, x, y) in tempStack) {
             chessPaint.color = color
             canvas?.drawPoint(x * gap.toFloat() + edge, y * gap.toFloat() + edge, chessPaint)
         }
